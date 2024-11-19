@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { HandlerTypes } from "@/lib/types";
+import Image from "next/image";
 import Slider from "./Slider";
 import { buttonsData } from "@/data/ButtonData";
 
@@ -17,7 +18,7 @@ export default function Article() {
             const width = currentClass[0].offsetWidth;
 
             currentShow.forEach((item) => {
-                item.style.width = `${width - 2}px`;
+                item.style.width = `${width - 1}px`;
             });
         }
 
@@ -52,17 +53,17 @@ export default function Article() {
                 className=" flex flex-col items-center justify-start gap-[22.5px] pb-[22.5px] h-[100dvh]"
             >
                 <div
-                    className={`w-full grid grid-cols-[repeat(auto-fit,_minmax(80px,_1fr))] border-y-[1px] border-t-[1px] border-[#EBEBEB]`}
+                    className={`w-full grid grid-cols-[repeat(auto-fit,_minmax(80px,_1fr))] border-y-[1px]  ${currentHandler ? "border-[#EBEBEB]" : "border-[#222222]"}`}
                 >
                     {buttonsData.map((item, index) => (
                         <div
                             onMouseEnter={() => handleCurrentEnter(index)}
                             onMouseLeave={() => handleCurrentLeave()}
                             key={index}
-                            className={`${index !== 0 && "border-[#EBEBEB] border-l-[1px] border-t-[1px]"
-                                }   !border-t-[1px] whitespace-nowrap flex items-center justify-center p-[31px_10px_29px]  mt-[8px] !1040:p-[10px_5px] cursor-pointer currentClass navbarButtonsParent`}
+                            className={`${index !== 0 && currentHandler ? "!border-[#EBEBEB] border-l-[1px]" : "!border-[#222222] border-l-[1px]"
+                                } whitespace-nowrap flex items-center justify-center p-[31px_10px_29px] !1040:p-[10px_5px] cursor-pointer currentClass navbarButtonsParent`}
                         >
-                            <p className=" text-[20px] text-center 1040:text-[12px] 1040:font-[600] font-[800] text-[#FFFFFF] navbarButtons">
+                            <p className={` text-[20px] text-center 1040:text-[12px] 1040:font-[600] font-[800] ${currentHandler ? "text-[#FFFFFF]" : "text-[#222222]"} navbarButtons`}>
                                 {item.title}
                             </p>
 
@@ -88,8 +89,9 @@ export default function Article() {
                                     </p>
 
                                     <div className="w-10 h-10 795:w-5 795:h-5 795:p-[4px] p-[12.5px] border-[1px] rounded-full border-[#EBEBEB] cursor-pointer hover:bg-[rgb(0,0,0,0.5)]">
-                                        <img
-                                            className="-rotate-90"
+                                        <Image
+                                            width={14}
+                                            height={13}
                                             src="/svg/arrow-down.svg"
                                             alt="*"
                                         />
@@ -101,7 +103,12 @@ export default function Article() {
                 </div>
 
                 <div className="w-10 h-10 p-[12.5px] border-[1px] rounded-full border-[#EBEBEB] cursor-pointer hover:bg-[#b2b2b2]">
-                    <img src="/svg/arrow-down.svg" alt="*" />
+                    <Image
+                        width={14}
+                        height={13}
+                        src="/svg/arrow-down.svg"
+                        alt="*"
+                    />
                 </div>
 
 

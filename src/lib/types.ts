@@ -6,4 +6,5 @@ export interface HandlerTypes {
     bgImage: string,
     desc: string,
     subDesc: string,
+    link?: string | number,
 }
