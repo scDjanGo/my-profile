@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,16 +19,16 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  transition: all 0.4s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
-.stroke-black {
+/* .stroke-black {
   -webkit-text-stroke: 1px black !important;
 }
 
@@ -38,11 +39,11 @@ body {
 #current,
 #currentTop {
   text-wrap: wrap;
-}
+} */
 
 /* for Animate */
 
-.slide-in-left {
+/* .slide-in-left {
   animation: slideInFromLeft 2s ease-out forwards;
 }
 
@@ -69,10 +70,10 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
-}
+} */
 
 /* for Media */
-@media (max-width: 795px) {
+/* @media (max-width: 795px) {
   .text-content {
     font-size: 12px !important;
   }
@@ -85,4 +86,4 @@ body {
   .navbarButtons {
     font-size: 8px !important;
   }
-}
+} */
