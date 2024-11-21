@@ -1,0 +1,8 @@
+export const PortfolioData = [
+    { id: 1, img: "/img/MyProject/webmenu.png", tag: "b2b", title: "WebMenu.online", description: "WebMenu.online is an online platform for creating digital menus for restaurants and cafes.", link: "https://webmenu.online/" },
+    { id: 2, img: "/img/MyProject/webmenu.qr.png", tag: "b2c", title: "WebMenu.QR", description: "The QR version of WebMenu.online allows customers to instantly access a digital menu by scanning a QR code.", link: "https://ocak-kebab-1.webmenu.online/" },
+    { id: 3, img: "/img/MyProject/dukon.png", tag: "b2b", title: "Dukon.online", description: "Dukon.online is an innovative platform designed to streamline the process of creating and managing websites for small businesses.", link: "https://dukon.online/" },
+    { id: 4, img: "/img/MyProject/dukon.qr.png", tag: "b2c", title: "Store.dukon", description: "The QR version of Dukon.online allows users to quickly access a mobile-friendly website version by scanning a QR code.", link: "https://store.dukon.online/" },
+    { id: 5, img: "/img/MyProject/worksapce.png", tag: "b2b", title: "WorkSpace", description: "Workspace is a collaborative platform designed to enhance team productivity and communication.", link: "https://www.godaddy.com/forsale/workspace.online?utm_source=TDFS_BINNS&utm_medium=parkedpages&utm_campaign=x_corp_tdfs-binns_base&traffic_type=TDFS_BINNS&traffic_id=binns&" },
+    { id: 6, img: "/img/MyProject/ngt.marketplace.png", tag: "b2b", title: "NFT Marketplace", description: "NFT Marketplace is an online platform for buying and selling NFTs (Non-Fungible Tokens).", link: "https://nft-market-3z8j2gel0-scdjangos-projects.vercel.app/" },
+]
