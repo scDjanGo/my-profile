@@ -4,7 +4,7 @@ import Link from "next/link"
 export default function Cv() {
     return (
 
-        <article id="CV" style={{ backgroundImage: "url('/img/bg.png')", backgroundSize: "cover" }} className="p-[100px_300px_50px] 1560:p-[100px_30px_50px]">
+        <article className="p-[100px_300px_50px] 1560:p-[100px_30px_50px]">
 
             <div className="w-full items-center justify-center bg-[#ffffff] rounded-[22px]  drop-shadow-[0_10px_10px_rgba(43,56,76,0.2)]">
                 <section className="max-w-[1320px] p-[112px] 1240:p-[30px] flex 695:flex-col gap-[25px] items-center justify-center">

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function MyProject() {
     return (
-        <section style={{ backgroundImage: "url('/img/bg.png')", backgroundSize: "cover" }} className="p-[100px_300px_50px] 1560:p-[60px_30px_50px] flex flex-col items-center justify-center ">
+        <section className="p-[100px_300px_50px] 1560:p-[60px_30px_50px] flex flex-col items-center justify-center ">
             <div className="w-full flex items-center justify-center flex-col">
                 <h2 className="text-[#132238] text-[48px] font-[600] 795:text-[26px]">Portfolio</h2>
                 <p className="text-center font-[400] text-[#87909D] text-[18px]  795:text-[14px]">

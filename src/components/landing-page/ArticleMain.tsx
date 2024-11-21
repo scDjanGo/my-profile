@@ -6,7 +6,7 @@ export default function ArticleMain() {
 
 
   return (
-    <article style={{ backgroundImage: "url('/img/bg.png')", backgroundSize: "cover" }} className="p-[20px_300px_28px] 1560:p-[20px_30px_28px]">
+    <article className="p-[20px_300px_28px] 1560:p-[20px_30px_28px]">
 
       <section className="flex items-center justify-center 795:flex-col ">
         <div className="flex flex-col 795:items-center gap-[24px] max-w-[650px] 795:max-w-[390px] 795:gap-[16px]">
