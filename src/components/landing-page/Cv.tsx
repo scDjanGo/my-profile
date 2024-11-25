@@ -9,7 +9,7 @@ export default function Cv() {
             <div className="w-full items-center justify-center bg-[#ffffff] rounded-[22px]  drop-shadow-[0_10px_10px_rgba(43,56,76,0.2)]">
                 <section className="max-w-[1320px] p-[112px] 1240:p-[30px] flex 695:flex-col gap-[25px] items-center justify-center">
                     <div className="relative">
-                        <Image width={424} height={468} className="max-w-[424px] max-h-[468px] 995:max-w-[212px] 995:max-h-[234px] 695:w-[180px]" src={"/img/1.png"} alt="#" priority />
+                        <Image width={424} height={468} className="max-w-[424px] max-h-[468px] 995:max-w-[212px] 995:max-h-[234px] 695:w-[180px]  rounded-[22px]" src={"/img/me.png"} alt="#" priority />
 
 
                     </div>

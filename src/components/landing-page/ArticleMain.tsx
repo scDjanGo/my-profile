@@ -20,7 +20,7 @@ export default function ArticleMain() {
         </div>
 
         <div className="max-w-[536px] max-h-[636px] 995:max-w-[390px] 995:max-h-[490px]">
-          <Image width={536} height={636} className="max-w-[536px] max-h-[636px] 995:max-w-[390px] 995:max-h-[490px] 695:w-[300px]" src={"/img/1.png"} alt="#" priority />
+          <Image width={536} height={636} className="max-w-[536px] max-h-[636px] 995:max-w-[390px] 995:max-h-[490px] 695:w-[300px] rounded-[22px]" src={"/img/me.png"} alt="#" priority />
         </div>
       </section>
 
