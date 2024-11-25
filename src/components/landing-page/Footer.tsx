@@ -27,7 +27,7 @@ export default function Footer() {
                 <Slider />
                 <div className="max-w-[900px] w-full grid grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-[12px] justify-center">
                     <div className="flex flex-col items-center">
-                        <Link href={"https://github.com/scDjanGo/"} target="blank" className="text-[#F0F1F3] text-[32px] font-[400] duration-200 hover:scale-[1.05] cursor-pointer group"><span className="group-hover:text-blue-300">G</span><span className="group-hover:text-blue-600">i</span><span className="group-hover:text-blue-300">t</span><span className="group-hover:text-yellow-400">H</span><span className="group-hover:text-blue-400">a</span><span className="group-hover:text-yellow-400">b</span></Link>
+                        <Link href={"https://github.com/scDjanGo/"} target="blank" className="text-[#F0F1F3] text-[32px] font-[400] duration-200 hover:scale-[1.05] cursor-pointer group"><span className="group-hover:text-blue-300">G</span><span className="group-hover:text-blue-600">i</span><span className="group-hover:text-blue-300">t</span><span className="group-hover:text-yellow-400">H</span><span className="group-hover:text-blue-400">u</span><span className="group-hover:text-yellow-400">b</span></Link>
                     </div>
                     <div className="flex flex-col items-center">
                         <Link href={"https://www.linkedin.com/in/asadbek-kasymov-ab080a31b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"} target="blank" className="text-[#F0F1F3] text-[32px] font-[400] duration-200 hover:scale-[1.05] cursor-pointer group">Linked<span className="group-hover:text-blue-800">In</span></Link>
