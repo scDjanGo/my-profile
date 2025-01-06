@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,62 +28,86 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* .stroke-black {
-  -webkit-text-stroke: 1px black !important;
+
+
+
+
+
+html, body {
+  font: 16px/1.4 'Lato', sans-serif;
+  color: #fefeff;
+  position: relative;
 }
 
-.stroke-white {
-  -webkit-text-stroke: 1px white !important;
+canvas {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
-#current,
-#currentTop {
-  text-wrap: wrap;
-} */
 
-/* for Animate */
-
-/* .slide-in-left {
-  animation: slideInFromLeft 2s ease-out forwards;
+[class^="letter"] {
+  -webkit-transition: opacity 3s ease;
+  -moz-transition: opacity 3s ease;
+  transition: opacity 3s ease;
 }
-
-.slide-in-right {
-  animation: slideInFromRight 2s ease-out forwards;
+.letter-0 {
+  transition-delay: 0.2s;
 }
-@keyframes slideInFromLeft {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.letter-1 {
+  transition-delay: 0.4s;
 }
-
-@keyframes slideInFromRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-} */
-
-/* for Media */
-/* @media (max-width: 795px) {
-  .text-content {
-    font-size: 12px !important;
-  }
+.letter-2 {
+  transition-delay: 0.6s;
 }
-@media (max-width: 595px) {
-  .navbarButtonsParent {
-    padding: 5px 2px;
-  }
-
-  .navbarButtons {
-    font-size: 8px !important;
-  }
-} */
+.letter-3 {
+  transition-delay: 0.8s;
+}
+.letter-4 {
+  transition-delay: 1.0s;
+}
+.letter-5 {
+  transition-delay: 1.2s;
+}
+.letter-6 {
+  transition-delay: 1.4s;
+}
+.letter-7 {
+  transition-delay: 1.6s;
+}
+.letter-8 {
+  transition-delay: 1.8s;
+}
+.letter-9 {
+  transition-delay: 2.0s;
+}
+.letter-10 {
+  transition-delay: 2.2s;
+}
+.letter-11 {
+  transition-delay: 2.4s;
+}
+.letter-12 {
+  transition-delay: 2.6s;
+}
+.letter-13 {
+  transition-delay: 2.8s;
+}
+.letter-14 {
+  transition-delay: 3.0s;
+}
+.letter-15 {
+  transition-delay: 3.2s;
+}
+h1.transition-in {
+  visibility: visible;
+}
+h1 [class^="letter"] {
+  opacity: 0;
+}
+h1.transition-in [class^="letter"] {
+  opacity: 1;
+}

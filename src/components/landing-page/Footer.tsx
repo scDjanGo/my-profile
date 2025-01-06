@@ -20,7 +20,7 @@ export default function Footer() {
     }
 
     return (
-        <footer id="footer">
+        <footer id="footer" className="relative z-[3]">
             <h3 className=" bg-[#2B384C] pt-[150px] 795:p-[50px] text-[#ffffff] text-center text-[64px] font-[700] 795:text-[46px]">My contacts</h3>
 
             <div className="relative p-[50px_300px_250px] 1560:p-[50px_30px_200px] bg-[#2B384C] flex flex-col gap-[60px] justify-center items-center">
