@@ -8,11 +8,13 @@ import MyTools from "@/components/landing-page/MyTools";
 
 export default function Home() {
 
-
-
-
   return (
     <div className="relative pt-[81px]">
+      
+      {/* <Article />
+      <AboutMe />
+      <MyTools /> */}
+      
       <HeaderMain />
       <ArticleMain />
       <AboutMe />
@@ -21,9 +23,6 @@ export default function Home() {
       <Cv />
       <Footer />
 
-      {/* <Article />
-      <AboutMe />
-      <MyTools /> */}
     </div>
   );
 }
