@@ -1,12 +1,28 @@
+"use client"
+
+
 import Image from "next/image"
 import Link from "next/link"
+import {motion} from "framer-motion"
 
 export default function Cv() {
+    const textVariant = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+      };
+
+
     return (
 
         <article style={{backgroundImage: "url('/img/bg.png')", backgroundSize: "cover"}} id="CV" className="p-[100px_300px_50px] 1560:p-[100px_30px_50px] bg-[#ffffff]">
 
-            <div className="w-full items-center justify-center bg-[#ffffff] rounded-[22px]  drop-shadow-[0_10px_10px_rgba(43,56,76,0.2)]">
+            <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={textVariant}
+            
+            className="w-full items-center justify-center bg-[#ffffff] rounded-[22px]  drop-shadow-[0_10px_10px_rgba(43,56,76,0.2)]">
                 <section className="max-w-[1320px] p-[112px] 1240:p-[30px] flex 695:flex-col gap-[25px] items-center justify-center">
                     <div className="relative">
                         <Image width={424} height={468} className="max-w-[424px] max-h-[468px] 995:max-w-[212px] 995:max-h-[234px] 695:w-[180px]  rounded-[22px]" src={"/img/me.png"} alt="#" priority />
@@ -44,7 +60,7 @@ export default function Cv() {
                     </div>
 
                 </section>
-            </div>
+            </motion.div>
         </article>
 
     )

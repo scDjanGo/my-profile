@@ -106,7 +106,6 @@
 
 "use client";
 
-import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
 
 export default function HeaderMain() {
@@ -119,22 +118,22 @@ export default function HeaderMain() {
     lastScrollY.current = currentScrollY;
   };
 
-  useEffect(() => {
-    const loadSnowflakes = () => {
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js";
-      script.onload = () => {
-        if (typeof window !== "undefined" && window.Snowflakes) {
-          new window.Snowflakes();
-        } else {
-          console.error("Snowflakes not loaded!");
-        }
-      };
-      document.body.appendChild(script);
-    };
+  // useEffect(() => {
+  //   const loadSnowflakes = () => {
+  //     const script = document.createElement("script");
+  //     script.src = "https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js";
+  //     script.onload = () => {
+  //       if (typeof window !== "undefined" && window.Snowflakes) {
+  //         new window.Snowflakes();
+  //       } else {
+  //         console.error("Snowflakes not loaded!");
+  //       }
+  //     };
+  //     document.body.appendChild(script);
+  //   };
 
-    loadSnowflakes();
-  }, []);
+  //   loadSnowflakes();
+  // }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -148,12 +147,12 @@ export default function HeaderMain() {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <script
           src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"
           defer
         ></script>
-      </Head>
+      </Head> */}
       <header
         className={`fixed w-full z-[2] bg-[#ffffff] p-[20px_300px_28px] 1560:p-[20px_30px_28px] flex items-center justify-end 695:justify-center transition-all duration-300 ${
           isVisible ? "top-0" : "top-[-100%]"
