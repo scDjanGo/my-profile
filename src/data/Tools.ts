@@ -10,11 +10,16 @@ export const Tools = [
     { id: 5, img: "/svg/js.svg", title: "JavaScript" },
     { id: 11, img: "/svg/github.svg", title: "GitHub" },
     { id: 8, img: "/img/logo-nextjs.png", title: "Next.js" },
+    { id: 17, img: "/svg/zustand.svg", title: "Zustand" },
     { id: 9, img: "/svg/redux.svg", title: "Redux" },
     { id: 12, img: "/svg/react-router.svg", title: "React-Router" },
     { id: 13, img: "/svg/git.svg", title: "Git" },
     { id: 10, img: "/svg/npm.svg", title: "npm" },
     { id: 1, img: "/svg/html.svg", title: "HTML" },
+    { id: 21, img: "/svg/i18n.svg", title: "i18n" },
+    { id: 18, img: "/svg/nodejs.svg", title: "Node JS" },
+    { id: 19, img: "/svg/expressjs.svg", title: "Express JS" },
+    { id: 20, img: "/svg/mongodb.svg", title: "Mongo" },
 ];
 
-// 16
+// 21

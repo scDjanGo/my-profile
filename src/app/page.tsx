@@ -9,7 +9,7 @@ import MyTools from "@/components/landing-page/MyTools";
 export default function Home() {
 
   return (
-    <div className="relative pt-[81px]">
+     <div className="relative pt-[81px] max-w-[1440px] w-full mx-auto">
       
       {/* <Article />
       <AboutMe />
