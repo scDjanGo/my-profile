@@ -13,7 +13,7 @@ export default function MyProject() {
                 </p>
             </div>
 
-            <div className='w-full mt-[70px] grid grid-cols-[repeat(auto-fit,_minmax(280px,_424px))] gap-[32px] justify-center   drop-shadow-[0_10px_10px_rgba(43,56,76,0.1)]'>
+            <div className='w-full mt-[70px] grid grid-cols-[repeat(auto-fit,_minmax(280px,_auto))] gap-[32px] justify-center   drop-shadow-[0_10px_10px_rgba(43,56,76,0.1)]'>
                 {PortfolioData.map(item =>
                     <Link  href={item.link}  target='blank' key={item.id} className='flex flex-col h-full justify-between rounded-[22px] cursor-pointer duration-200 group hover:scale-[1.02] '>
                         <div className='max-w-[424px] max-h-[248px]'>

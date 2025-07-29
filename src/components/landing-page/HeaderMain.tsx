@@ -50,7 +50,7 @@ export default function HeaderMain() {
         ></script>
       </Head> */}
       <header
-        className={`fixed w-full z-[2] bg-[#ffffff] p-[20px_300px_28px] 1560:p-[20px_30px_28px] flex items-center justify-end 695:justify-center transition-all duration-300 max-w-[1440px] ${
+        className={`fixed w-full z-[2] bg-[#ffffff] p-[20px_300px_28px] 1560:p-[20px_30px_28px] flex items-center justify-end 695:justify-center transition-all duration-300 max-w-[1560px] ${
           isVisible ? "top-0" : "top-[-100%]"
         }`}
       >
