@@ -18,6 +18,15 @@ export const PortfolioData = [
     link: "https://jerdeshmoskva.ru/",
   },
   {
+    id: 11,
+    img: "/img/MyProject/prolab-agency.png",
+    tag: "digital innovation / IT agency",
+    title: "PROlab Agency",
+    description:
+      "PROlab Agency is a digital innovation company from Kyrgyzstan, specializing in web and mobile development, UI/UX design, AI solutions, SEO, SMM, chatbots, CRM, ERP, and IT consulting.",
+    link: "https://prolabagency.com/en",
+  },
+  {
     id: 10,
     img: "/img/MyProject/karagay.png",
     tag: "agriculture",
@@ -90,7 +99,7 @@ export const PortfolioData = [
     link: "https://nft-market-3z8j2gel0-scdjangos-projects.vercel.app/",
   },
 ];
-// 10
+// 11
 
 export const PetProjects = [
   {
@@ -101,15 +110,16 @@ export const PetProjects = [
     description:
       "Dictionary Cards is an online educational tool that helps users learn and memorize vocabulary using interactive flashcards.",
     link: "https://dictionary-cards.vercel.app",
-  },{
-  id: 2,
-  img: "/img/MyProject/questions-answers.png",
-  tag: "education",
-  title: "Questions & Answers",
-  description:
-    "Questions & Answers is a platform designed for mentors to assess students' knowledge and administer tests efficiently.",
-  link: "https://questions-answers-beige.vercel.app",
-}
+  },
+  {
+    id: 2,
+    img: "/img/MyProject/questions-answers.png",
+    tag: "education",
+    title: "Questions & Answers",
+    description:
+      "Questions & Answers is a platform designed for mentors to assess students' knowledge and administer tests efficiently.",
+    link: "https://questions-answers-beige.vercel.app",
+  },
 ];
 
 // 2
