@@ -24,7 +24,7 @@ export const PortfolioData = [
     title: "PROlab Agency",
     description:
       "PROlab Agency is a digital innovation company from Kyrgyzstan, specializing in web and mobile development, UI/UX design, AI solutions, SEO, SMM, chatbots, CRM, ERP, and IT consulting.",
-    link: "https://prolabagency.com/en",
+    link: "https://prolabagency.com",
   },
   {
     id: 10,
