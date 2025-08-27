@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Footer() {
   const handleCopyWatsAppNumber = () => {
-    const textToCopy = "+79042589777";
+    const textToCopy = "+996557766997";
     navigator.clipboard.writeText(textToCopy);
   };
 
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
           <div className="flex flex-col items-center">
             <Link
-              href={"https://wa.me/79042589777?text=Привет"}
+              href={"https://wa.me/996557766997?text=Привет"}
               target="blank"
               className="text-[#F0F1F3] text-[32px] font-[400] duration-200 hover:scale-105 cursor-pointer hover:text-green-400"
             >
@@ -94,7 +94,7 @@ export default function Footer() {
               id="copyWatsApp"
               className="text-[#F0F1F3] text-[16px] font-[400] duration-200 hover:scale-[1.05] cursor-copy mt-[6px] hover:text-green-400"
             >
-              +7 (904) 258 9777
+              +996 (557) 766 997
             </p>
           </div>
         </div>
