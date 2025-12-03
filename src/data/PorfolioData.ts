@@ -1,14 +1,5 @@
 export const PortfolioData = [
   {
-    id: 7,
-    img: "/img/MyProject/aigo_ads.png",
-    tag: "e-commerce",
-    title: "AIGO.KG",
-    description:
-      "AIGO.KG is an online platform offering a wide range of electronics and home appliances in Kyrgyzstan.",
-    link: "https://aigo.kg",
-  },
-  {
     id: 9,
     img: "/img/MyProject/jerdeshmoskva.png",
     tag: "real estate",
@@ -36,6 +27,33 @@ export const PortfolioData = [
     link: "https://www.karagay.kg",
   },
   {
+    id: 12,
+    img: "/img/MyProject/kukuruza777.png",
+    tag: "food",
+    title: "Kukuruza 777",
+    description:
+      "Kukuruza 777 is a Kyrgyz brand offering natural corn sticks made from selected corn, sugar, and oil without artificial additives or GMOs.",
+    link: "https://777kukuruza.kg",
+  },
+  {
+    id: 13,
+    img: "/img/MyProject/impuls-med.png",
+    tag: "medical",
+    title: "impuls-med",
+    description:
+      "Impuls-Med is a modern medical center in Osh, Kyrgyzstan, providing comprehensive diagnostics, treatments, and consultations in orthopedics, cardiology, neurology, and more.",
+    link: "https://impuls-med.kg",
+  },
+  {
+    id: 14,
+    img: "/img/MyProject/nerjaveyka.png",
+    tag: "construction",
+    title: "НЕРЖАВЕЙКА",
+    description:
+      "Nerzhaveyka is a leading supplier of stainless steel products in Osh, Kyrgyzstan, including pipes, sheets, profiles, and fittings for wholesale and retail.",
+    link: "https://nerzhaveyka.kg",
+  },
+  {
     id: 8,
     img: "/img/MyProject/nedvizhka.png",
     tag: "real estate",
@@ -61,6 +79,15 @@ export const PortfolioData = [
     description:
       "The QR version of WebMenu.online allows customers to instantly access a digital menu by scanning a QR code.",
     link: "https://ocak-kebab-1.webmenu.online/",
+  },
+  {
+    id: 7,
+    img: "/img/MyProject/aigo_ads.png",
+    tag: "e-commerce",
+    title: "AIGO.KG",
+    description:
+      "AIGO.KG is an online platform offering a wide range of electronics and home appliances in Kyrgyzstan.",
+    link: "https://aigo.kg",
   },
   {
     id: 3,
@@ -99,7 +126,7 @@ export const PortfolioData = [
     link: "https://nft-market-3z8j2gel0-scdjangos-projects.vercel.app/",
   },
 ];
-// 11
+// 14
 
 export const PetProjects = [
   {
@@ -120,6 +147,15 @@ export const PetProjects = [
       "Questions & Answers is a platform designed for mentors to assess students' knowledge and administer tests efficiently.",
     link: "https://questions-answers-beige.vercel.app",
   },
+  {
+    id: 3,
+    img: "/img/MyProject/web-redactor.png",
+    tag: "Learning",
+    title: "Web-Redactor",
+    description:
+      "An intuitive online editor designed specifically for learning and practicing English grammar. Teachers and students can create, edit, and complete interactive exercises with real-time gap-filling, instant feedback, and progress tracking. Perfect for classrooms, self-study, or language mentoring.",
+    link: "https://web-redactor.vercel.app",
+  },
 ];
 
-// 2
+// 3
