@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 export default function HeaderMain() {
   const [isVisible, setIsVisible] = useState(true);
@@ -36,10 +37,10 @@ export default function HeaderMain() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleScrollTo = (id:string) => {
-    const target = document.getElementById(id);
-    if (target) target.scrollIntoView({ behavior: "smooth" });
-  };
+  // const handleScrollTo = (id:string) => {
+  //   const target = document.getElementById(id);
+  //   if (target) target.scrollIntoView({ behavior: "smooth" });
+  // };
 
   return (
     <>
@@ -55,30 +56,35 @@ export default function HeaderMain() {
         }`}
       >
         <ul className="flex items-center 695:justify-center gap-[8px] 695:gap-[4px]">
-          <li
-            onClick={() => handleScrollTo("aboutMe")}
+          <Link
+          href={`#aboutMe`}
+            // onClick={() => handleScrollTo("aboutMe")}
             className="text-[#333333] text-[16px] 695:text-[14px] 695:p-[6px_10px] font-[500] p-[12px_20px] cursor-pointer rounded-[4px] hover:bg-[#A53DFF] hover:text-[#ffffff]"
           >
             About me
-          </li>
-          <li
-            onClick={() => handleScrollTo("myTools")}
+          </Link>
+          <Link
+          href={`#myTools`}
+
+            // onClick={() => handleScrollTo("myTools")}
             className="text-[#333333] text-[16px] 695:text-[14px] 695:p-[6px_10px] font-[500] p-[12px_20px] cursor-pointer rounded-[4px] hover:bg-[#A53DFF] hover:text-[#ffffff]"
           >
             Tools
-          </li>
-          <li
-            onClick={() => handleScrollTo("CV")}
+          </Link>
+          <Link 
+          href={`#CV`}
+            // onClick={() => handleScrollTo("CV")}
             className="text-[#333333] text-[16px] 695:text-[14px] 695:p-[6px_10px] font-[500] p-[12px_20px] cursor-pointer rounded-[4px] hover:bg-[#A53DFF] hover:text-[#ffffff]"
           >
             CV
-          </li>
-          <li
-            onClick={() => handleScrollTo("footer")}
+          </Link>
+          <Link
+          href={`#footer`}
+            // onClick={() => handleScrollTo("footer")}
             className="text-[#333333] text-[16px] 695:text-[14px] 695:p-[6px_10px] font-[500] p-[12px_20px] cursor-pointer rounded-[4px] hover:bg-[#A53DFF] hover:text-[#ffffff]"
           >
             Contact
-          </li>
+          </Link>
         </ul>
       </header>
     </>
