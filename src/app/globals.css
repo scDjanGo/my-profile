@@ -1,90 +1,1072 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..700&subset=cyrillic,latin&display=swap');
+@import 'tailwindcss';
+
+/*
+ * Fonts: real Segoe UI on Windows; elsewhere Selawik — Microsoft's open-source,
+ * metric-compatible stand-in for Segoe UI (Latin only), with Open Sans covering Cyrillic.
+ */
+@font-face {
+  font-family: 'Selawik';
+  src: url('/fonts/selawkl.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Selawik';
+  src: url('/fonts/selawk.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Selawik';
+  src: url('/fonts/selawksb.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Selawik';
+  src: url('/fonts/selawkb.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* ---------- Theme tokens (Windows 11 light / dark) ---------- */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-text: 'Segoe UI Variable Text', 'Segoe UI', Selawik, 'Open Sans', system-ui, sans-serif;
+  --font-display: 'Segoe UI Variable Display', 'Segoe UI', Selawik, 'Open Sans', system-ui, sans-serif;
+
+  --accent: var(--accent-l, #005fb8);
+  --accent-text: var(--accent-l, #005fb8);
+  --accent-hover: color-mix(in srgb, var(--accent) 88%, white);
+  --on-accent: #ffffff;
+
+  --text: #1a1a1a;
+  --text-1: #2b2b2b;
+  --text-2: #5d5d5d;
+
+  --surface: #f9f9f9;
+  --card: #ffffff;
+  --mica: #f3f3f3;
+  --acrylic: rgba(243, 243, 243, 0.85);
+  --taskbar: rgba(238, 241, 246, 0.85);
+  --taskbar-solid: #eef1f6;
+  --field: rgba(255, 255, 255, 0.7);
+  --field-border: rgba(0, 0, 0, 0.06);
+  --field-bottom: rgba(0, 0, 0, 0.45);
+  --control: rgba(255, 255, 255, 0.7);
+  --control-hover: rgba(249, 249, 249, 0.5);
+  --control-border: rgba(0, 0, 0, 0.0578);
+  --control-bottom: rgba(0, 0, 0, 0.1622);
+
+  --hover: rgba(0, 0, 0, 0.037);
+  --pressed: rgba(0, 0, 0, 0.024);
+  --selected: color-mix(in srgb, var(--accent) 12%, transparent);
+  --selected-border: color-mix(in srgb, var(--accent) 40%, transparent);
+  --divider: rgba(0, 0, 0, 0.0803);
+  --stroke: rgba(0, 0, 0, 0.1);
+  --shadow: 0 32px 64px rgba(0, 0, 0, 0.1876), 0 2px 21px rgba(0, 0, 0, 0.1474);
+  --shadow-inactive: 0 16px 32px rgba(0, 0, 0, 0.12), 0 1px 8px rgba(0, 0, 0, 0.08);
+  --flyout-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+
+  --focus: #1a1a1a;
+  --paint-bg: #e6ebf2;
+  --sky-top: #8fa6c4;
+  --sky-bottom: #4f6788;
+  --sky-glow: rgba(220, 235, 255, 0.35);
+  --wall-base-2: #b4cdee;
+  --wallpaper: url('/wallpaper/bloom-light.svg');
+
+  /* Google Chrome (Refresh 2023) */
+  --chrome-frame: #dfe3e8;
+  --chrome-toolbar: #ffffff;
+  --chrome-omnibox: #edf2fa;
+  --chrome-accent: #0b57d0;
+  --chrome-on-accent: #ffffff;
+  --chrome-text: #1f1f1f;
+  --chrome-text-2: #474747;
+  --chrome-hover: rgba(31, 31, 31, 0.08);
+  --chrome-divider: #e1e3e1;
+  --chrome-tab-sep: #9aa0a6;
+  --chrome-shortcut: #f1f3f4;
+
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root[data-theme='dark'] {
+  --accent: var(--accent-d, #60cdff);
+  --accent-text: var(--accent-d, #60cdff);
+  --accent-hover: color-mix(in srgb, var(--accent) 88%, black);
+  --on-accent: #000000;
+
+  --text: #ffffff;
+  --text-1: #e4e4e4;
+  --text-2: #a7a7a7;
+
+  --surface: #272727;
+  --card: #2b2b2b;
+  --mica: #202020;
+  --acrylic: rgba(38, 38, 38, 0.88);
+  --taskbar: rgba(28, 28, 28, 0.85);
+  --taskbar-solid: #1c1c1c;
+  --field: rgba(255, 255, 255, 0.06);
+  --field-border: rgba(255, 255, 255, 0.07);
+  --field-bottom: rgba(255, 255, 255, 0.55);
+  --control: rgba(255, 255, 255, 0.061);
+  --control-hover: rgba(255, 255, 255, 0.084);
+  --control-border: rgba(255, 255, 255, 0.07);
+  --control-bottom: rgba(255, 255, 255, 0.03);
+
+  --hover: rgba(255, 255, 255, 0.061);
+  --pressed: rgba(255, 255, 255, 0.04);
+  --divider: rgba(255, 255, 255, 0.0837);
+  --stroke: rgba(255, 255, 255, 0.09);
+  --shadow: 0 32px 64px rgba(0, 0, 0, 0.56), 0 2px 21px rgba(0, 0, 0, 0.55);
+  --shadow-inactive: 0 16px 32px rgba(0, 0, 0, 0.4), 0 1px 8px rgba(0, 0, 0, 0.3);
+  --flyout-shadow: 0 8px 16px rgba(0, 0, 0, 0.26);
+
+  --focus: #ffffff;
+  --paint-bg: #1d1d1d;
+  --sky-top: #07101f;
+  --sky-bottom: #010205;
+  --sky-glow: rgba(40, 90, 170, 0.18);
+  --wall-base-2: #030812;
+  --wallpaper: url('/wallpaper/bloom-dark.svg');
+
+  --chrome-frame: #1f1f1f;
+  --chrome-toolbar: #333537;
+  --chrome-omnibox: #282a2c;
+  --chrome-accent: #a8c7fa;
+  --chrome-on-accent: #062e6f;
+  --chrome-text: #e3e3e3;
+  --chrome-text-2: #c4c7c5;
+  --chrome-hover: rgba(227, 227, 227, 0.08);
+  --chrome-divider: #444746;
+  --chrome-tab-sep: #5f6368;
+  --chrome-shortcut: #303134;
+
+  color-scheme: dark;
 }
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  transition: all 0.3s ease-in-out;
-  scroll-behavior: smooth;
+/* ---------- Base ---------- */
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: "Inter", sans-serif;
+  color: var(--text);
+  background: var(--wall-base-2);
+  font-family: var(--font-text);
+  font-size: 14px;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
 }
 
-/* .stroke-black {
-  -webkit-text-stroke: 1px black !important;
+.win-display {
+  font-family: var(--font-display);
 }
 
-.stroke-white {
-  -webkit-text-stroke: 1px white !important;
+button {
+  cursor: default;
 }
 
-#current,
-#currentTop {
-  text-wrap: wrap;
-} */
-
-/* for Animate */
-
-/* .slide-in-left {
-  animation: slideInFromLeft 2s ease-out forwards;
+/* Like the real shell: UI text is not selectable, editable fields are */
+.win-root {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.slide-in-right {
-  animation: slideInFromRight 2s ease-out forwards;
+.win-root input,
+.win-root textarea {
+  user-select: text;
+  -webkit-user-select: text;
 }
-@keyframes slideInFromLeft {
-  0% {
-    transform: translateX(-100%);
+
+button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Windows focus rect: keyboard only, and it follows the control's own corner radius */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* Fields show focus with their own accent underline; containers that take focus
+   only to receive shortcuts never show a ring */
+input:focus-visible,
+textarea:focus-visible,
+[tabindex='-1']:focus-visible,
+.win-app[tabindex]:focus-visible {
+  outline: none;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text) 30%, transparent) transparent;
+}
+
+/* Iframes would swallow pointer events while a window is dragged over them */
+body.win-dragging iframe {
+  pointer-events: none;
+}
+
+body.win-dragging {
+  user-select: none;
+}
+
+.win-fade-in {
+  animation: win-fade 0.2s ease-out;
+}
+
+@keyframes win-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Component classes live in a layer so Tailwind utilities on the same element still win */
+@layer components {
+  /* ---------- Wallpaper & desktop ---------- */
+
+  .win-sky {
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 58%, var(--sky-glow), transparent 70%),
+      linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  }
+
+  .win-wallpaper {
+    background: var(--wall-base-2) var(--wallpaper) center / cover no-repeat;
+  }
+
+  .win-desktop-grid {
+    --cell-w: 84px;
+    --cell-h: 96px;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(auto-fill, var(--cell-h));
+    grid-auto-columns: var(--cell-w);
+    align-content: start;
+  }
+
+  .win-desktop-grid[data-size='small'] {
+    --cell-w: 76px;
+    --cell-h: 74px;
+  }
+
+  .win-desktop-grid[data-size='large'] {
+    --cell-w: 104px;
+    --cell-h: 124px;
+  }
+
+  @media (max-width: 639px) {
+    .win-desktop-grid {
+      grid-auto-flow: row;
+      grid-template-rows: none;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: var(--cell-h);
+    }
+  }
+
+  .win-desktop-icon {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 2px 4px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.45);
+  }
+
+  .win-desktop-icon:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .win-desktop-icon.is-selected {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .win-desktop-icon.is-dragging {
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.18);
+    cursor: grabbing;
+  }
+
+  .win-desktop-icon.is-drop-target {
+    background: color-mix(in srgb, var(--accent-l, #005fb8) 35%, rgba(255, 255, 255, 0.2));
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .win-band {
+    z-index: 5;
+    background: color-mix(in srgb, var(--accent-l, #005fb8) 30%, transparent);
+    border: 1px solid var(--accent-l, #005fb8);
+  }
+
+  /* ---------- Windows ---------- */
+
+  .win-window {
+    background: var(--mica);
+    border: 1px solid var(--stroke);
+    box-shadow: var(--shadow-inactive);
+    color: var(--text);
+  }
+
+  .win-window.is-active {
+    box-shadow: var(--shadow);
+  }
+
+  .win-window:not(.is-active) .win-titlebar {
+    color: var(--text-2);
+  }
+
+  .win-app {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .win-caption {
+    display: flex;
+    height: 100%;
+    min-height: 32px;
+    width: 46px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .win-caption:hover {
+    background: var(--hover);
+  }
+
+  .win-caption-close:hover {
+    background: #c42b1c;
+    color: #fff;
+  }
+
+  .win-snap-zone {
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--text) 14%, transparent);
+    transition: background 0.1s;
+  }
+
+  .win-snap-zone:hover {
+    background: var(--accent);
+  }
+
+  .win-snap-preview {
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--acrylic) 60%, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(24px);
+    box-shadow: var(--flyout-shadow);
+  }
+
+  /* ---------- Controls (WinUI 3) ---------- */
+
+  .win-btn-icon {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .win-btn-icon:hover,
+  .win-btn-icon.is-on {
+    background: var(--hover);
+  }
+
+  .win-btn-icon:active {
+    background: var(--pressed);
+  }
+
+  .win-btn {
+    border-radius: 4px;
+    padding: 5px 11px;
+    background: var(--control);
+    border: 1px solid var(--control-border);
+    border-bottom-color: var(--control-bottom);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .win-btn:hover {
+    background: var(--control-hover);
+  }
+
+  .win-btn:active {
+    color: var(--text-2);
+  }
+
+  .win-btn-accent,
+  .win-btn-accent:hover {
+    background: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 80%, white);
+    border-bottom-color: color-mix(in srgb, var(--accent) 70%, black);
+    color: var(--on-accent);
+  }
+
+  .win-btn-accent:hover {
+    background: var(--accent-hover);
+  }
+
+  .win-cmd {
+    display: inline-flex;
+    height: 32px;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+
+  .win-cmd:hover,
+  .win-cmd.is-on {
+    background: var(--hover);
+  }
+
+  .win-field {
+    background: var(--field);
+    border: 1px solid var(--field-border);
+    border-bottom-color: var(--field-bottom);
+    border-radius: 4px;
+  }
+
+  /* WinUI TextBox: the accent underline is drawn inside, so nothing shifts */
+  .win-field {
+    transition: background 0.1s;
+  }
+
+  .win-field:hover {
+    background: var(--control-hover);
+  }
+
+  .win-field:focus-within {
+    background: var(--card);
+    border-bottom-color: transparent;
+    box-shadow: inset 0 -2px 0 var(--accent);
+  }
+
+  .win-field.rounded-full\!:focus-within {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .win-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 4px;
+    background: var(--card);
+    border: 1px solid var(--divider);
+  }
+
+  .win-row:hover {
+    background: color-mix(in srgb, var(--card) 96%, var(--text));
+  }
+
+  .win-setting-row {
+    display: flex;
+    min-height: 68px;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: 4px;
+    background: var(--card);
+    border: 1px solid var(--divider);
+  }
+
+  .win-range {
+    accent-color: var(--accent);
+  }
+
+  .win-toggle {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid var(--text-2);
+    background: var(--control);
+    transition: background 0.15s;
+  }
+
+  .win-toggle > span {
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--text-2);
+    transform: translateY(-50%);
+    transition: left 0.15s cubic-bezier(0.1, 0.9, 0.2, 1), width 0.1s, height 0.1s;
+  }
+
+  .win-toggle:hover > span {
+    width: 14px;
+    height: 14px;
+  }
+
+  .win-toggle.is-on {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .win-toggle.is-on > span {
+    left: 23px;
+    background: var(--on-accent);
+  }
+
+  .win-segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 6px;
+    background: var(--field);
+    border: 1px solid var(--field-border);
+  }
+
+  .win-segmented > button {
+    min-width: 44px;
+    border-radius: 4px;
+    padding: 4px 12px;
+  }
+
+  .win-segmented > button:hover {
+    background: var(--hover);
+  }
+
+  .win-segmented > button.is-on {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  /* ---------- Taskbar & flyouts ---------- */
+
+  .win-taskbar {
+    background: var(--taskbar);
+    backdrop-filter: blur(30px);
+    border-top: 1px solid var(--divider);
+    color: var(--text);
+  }
+
+  .win-tb-btn {
+    display: inline-flex;
+    height: 40px;
+    width: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.12s;
+  }
+
+  .win-tb-btn:hover,
+  .win-tb-btn.is-on {
+    background: var(--hover);
+  }
+
+  .win-tb-btn:active > * {
+    transform: scale(0.88);
+  }
+
+  .win-tb-btn > * {
+    transition: transform 0.12s;
+  }
+
+  .win-tb-search-label {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .win-tb-search {
+      width: 200px;
+      height: 32px;
+      justify-content: flex-start;
+      gap: 10px;
+      margin: 0 4px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: var(--field);
+      border: 1px solid var(--field-border);
+    }
+
+    .win-tb-search:hover,
+    .win-tb-search.is-on {
+      background: var(--card);
+    }
+
+    .win-tb-search-label {
+      display: inline;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+  }
+
+  .win-flyout,
+  .win-menu {
+    background: var(--acrylic);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--stroke);
+    border-radius: 8px;
+    box-shadow: var(--flyout-shadow);
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  .win-flyout-footer {
+    background: color-mix(in srgb, var(--acrylic) 70%, var(--text) 4%);
+    border-top: 1px solid var(--divider);
+  }
+
+  .win-qs-tile {
+    display: flex;
+    width: 100%;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: var(--control);
+    border: 1px solid var(--control-border);
+    border-bottom-color: var(--control-bottom);
+  }
+
+  .win-qs-tile:hover {
+    background: var(--control-hover);
+  }
+
+  .win-qs-tile.is-on {
+    background: var(--accent);
+    color: var(--on-accent);
+    border-color: transparent;
+  }
+
+  .win-qs-tile.is-on:hover {
+    background: var(--accent-hover);
+  }
+
+  .win-notice {
+    position: relative;
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--divider);
+    font-size: 13px;
+  }
+
+  .win-menu {
+    padding: 4px;
+    font-size: 13px;
+    overflow: visible;
+  }
+
+  .win-menu-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 12px;
+    border-radius: 4px;
+    text-align: left;
+    cursor: default;
+  }
+
+  .win-menu-item:hover {
+    background: var(--hover);
+  }
+
+  /* ---------- Lock screen ---------- */
+
+  .win-login-btn {
+    min-width: 140px;
+    justify-content: center;
+    border-radius: 4px;
+    padding: 7px 20px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+  }
+
+  .win-login-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .win-lock-btn {
+    display: inline-flex;
+    min-width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border-radius: 4px;
+  }
+
+  button.win-lock-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .win-spinner circle {
+    transform-origin: 20px 20px;
+    animation: win-orbit 2.6s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+  }
+
+  @keyframes win-orbit {
+    0% {
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+    70% {
+      transform: rotate(720deg);
+      opacity: 1;
+    }
+    85%,
+    100% {
+      transform: rotate(800deg);
+      opacity: 0;
+    }
+  }
+
+  /* ---------- Calculator ---------- */
+
+  .win-calc {
+    background: var(--mica);
+  }
+
+  .win-calc-key {
+    display: flex;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--card) 70%, transparent);
+    border: 1px solid var(--control-border);
+    font-size: 14px;
+  }
+
+  .win-calc-key.is-num {
+    background: var(--card);
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .win-calc-key:hover {
+    background: var(--control-hover);
+  }
+
+  .win-calc-key.is-accent {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .win-calc-key.is-accent:hover {
+    background: var(--accent-hover);
+  }
+
+  /* ---------- Google Chrome ---------- */
+
+  .chrome {
+    background: var(--chrome-toolbar);
+    color: var(--chrome-text);
+    font-family: 'Segoe UI', Selawik, 'Open Sans', system-ui, sans-serif;
+  }
+
+  .chrome-frame {
+    background: var(--chrome-frame);
+  }
+
+  .chrome-toolbar {
+    background: var(--chrome-toolbar);
+  }
+
+  .chrome .win-caption {
+    color: var(--chrome-text);
+  }
+
+  .chrome-icon-btn {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: var(--chrome-text-2);
+  }
+
+  .chrome-icon-btn:hover {
+    background: var(--chrome-hover);
+  }
+
+  .chrome-tab {
+    position: relative;
+    display: flex;
+    height: 34px;
+    min-width: 56px;
+    max-width: 240px;
+    flex: 1 1 240px;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 0 12px;
+    border-radius: 8px 8px 0 0;
+    color: var(--chrome-text-2);
+    font-size: 12px;
+  }
+
+  /* separators between inactive tabs */
+  .chrome-tab:not(.is-active):not(:first-child)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    height: 16px;
+    width: 1px;
+    background: var(--chrome-tab-sep);
+    opacity: 0.6;
+  }
+
+  .chrome-tab.is-active + .chrome-tab::before,
+  .chrome-tab:hover + .chrome-tab::before,
+  .chrome-tab:not(.is-active):hover::before {
     opacity: 0;
   }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
+
+  .chrome-tab:not(.is-active):hover {
+    background: color-mix(in srgb, var(--chrome-toolbar) 55%, transparent);
+    border-radius: 8px;
+    height: 30px;
+    margin-bottom: 4px;
+  }
+
+  .chrome-tab.is-active {
+    background: var(--chrome-toolbar);
+    color: var(--chrome-text);
+    z-index: 1;
+  }
+
+  /* the curved "feet" that blend the active tab into the toolbar */
+  .chrome-tab.is-active::before,
+  .chrome-tab.is-active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 8px;
+    height: 8px;
+  }
+
+  .chrome-tab.is-active::before {
+    left: -8px;
+    background: radial-gradient(circle at 0 0, transparent 8px, var(--chrome-toolbar) 8.5px);
+  }
+
+  .chrome-tab.is-active::after {
+    right: -8px;
+    background: radial-gradient(circle at 100% 0, transparent 8px, var(--chrome-toolbar) 8.5px);
+  }
+
+  .chrome-tab-close {
+    display: flex;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+  }
+
+  .chrome-tab-close:hover {
+    background: var(--chrome-hover);
+  }
+
+  .chrome-omnibox {
+    background: var(--chrome-omnibox);
+    border: 2px solid transparent;
+    color: var(--chrome-text);
+  }
+
+  .chrome-omnibox:hover {
+    background: color-mix(in srgb, var(--chrome-omnibox) 92%, var(--chrome-text));
+  }
+
+  .chrome-omnibox:focus-within {
+    background: var(--chrome-toolbar);
+    border-color: var(--chrome-accent);
+  }
+
+  .chrome-bookmark {
+    display: inline-flex;
+    height: 28px;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--chrome-text);
+  }
+
+  .chrome-bookmark:hover {
+    background: var(--chrome-hover);
+  }
+
+  .chrome-ntp {
+    background: var(--chrome-toolbar);
+  }
+
+  :root[data-theme='dark'] .chrome-ntp {
+    background: #202124;
+  }
+
+  .chrome-ntp-search {
+    background: var(--chrome-omnibox);
+    color: var(--chrome-text);
+  }
+
+  .chrome-ntp-search:hover,
+  .chrome-ntp-search:focus-within {
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  }
+
+  .chrome-shortcut {
+    color: var(--chrome-text);
+  }
+
+  .chrome-shortcut:hover {
+    background: var(--chrome-hover);
+  }
+
+  .chrome-shortcut-icon {
+    background: var(--chrome-shortcut);
+  }
+
+  /* ---------- Paint ---------- */
+
+  .win-paint-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 0 12px;
+    border-left: 1px solid var(--divider);
+  }
+
+  .win-paint-group > span {
+    font-size: 11px;
+    color: var(--text-2);
+  }
+
+  .win-paint-tool {
+    display: inline-flex;
+    width: 32px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid transparent;
+  }
+
+  .win-paint-tool:hover {
+    background: var(--hover);
+  }
+
+  .win-paint-tool.is-on {
+    background: var(--selected);
+    border-color: var(--selected-border);
+  }
+
+  /* ---------- Solitaire ---------- */
+
+  .win-felt {
+    background:
+      radial-gradient(ellipse 80% 70% at 50% 35%, rgba(255, 255, 255, 0.12), transparent 70%),
+      linear-gradient(160deg, #1d7a46, #0f5a33);
+  }
+
+  .win-card-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7%/5%;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.28);
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  button.win-card-slot:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .win-card {
+    border-radius: 8%/5.7%;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    color: #1b1b1b;
+    font-weight: 600;
+    line-height: 1;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .win-card.is-red {
+    color: #d4202c;
+  }
+
+  .win-card.is-back {
+    cursor: default;
+    border: 3px solid #fff;
+    background:
+      repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 0 4px, transparent 4px 9px),
+      repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.12) 0 4px, transparent 4px 9px),
+      linear-gradient(160deg, #2a7de1, #1550a8);
+  }
+
+  .win-card-corner {
+    position: absolute;
+    left: 7%;
+    top: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .win-card-corner.is-bottom {
+    left: auto;
+    top: auto;
+    right: 7%;
+    bottom: 5%;
+    transform: rotate(180deg);
+  }
+
+  .win-card-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .win-card-face {
+    font-size: 2.4em;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
   }
 }
-
-@keyframes slideInFromRight {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-} */
-
-/* for Media */
-/* @media (max-width: 795px) {
-  .text-content {
-    font-size: 12px !important;
-  }
-}
-@media (max-width: 595px) {
-  .navbarButtonsParent {
-    padding: 5px 2px;
-  }
-
-  .navbarButtons {
-    font-size: 8px !important;
-  }
-} */

@@ -1,64 +1,52 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Asadbek's Portfolio",
-  description:
-    "Asadbek's portfolio showcasing projects in web development and software engineering.",
-  keywords: [
-    "portfolio",
-    "web development",
-    "projects",
-    "React",
-    "Next.js",
-    "JavaScript",
-    "TypeScript",
-  ],
-  icons: {
-    icon: "/svg/logo.svg",
-  },
-  authors: [{ name: "Asadbek", url: "https://asadbek-kasymov.vercel.app/" }],
-  openGraph: {
-    title: "Asadbek's Portfolio",
-    description:
-      "Explore Asadbek's projects including web apps, e-commerce, and educational platforms.",
-    url: "https://asadbek-kasymov.vercel.app/",
-    siteName: "Asadbek Portfolio",
-    images: [
-      {
-        url: "/img/me_3.png",
-        width: 1200,
-        height: 630,
-        alt: "Asadbek Portfolio Preview",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Asadbek's Portfolio",
-    description:
-      "A showcase of projects by Asadbek in frontend and fullstack development.",
-    images: ["/img/me_3.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: true,
-  },
+const SITE = "https://asadbek-kasymov.vercel.app/";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("meta");
+  const locale = await getLocale();
+  return {
+    metadataBase: new URL(SITE),
+    title: t("title"),
+    description: t("description"),
+    keywords: ["portfolio", "web development", "projects", "React", "Next.js", "JavaScript", "TypeScript"],
+    icons: { icon: "/svg/logo.svg" },
+    authors: [{ name: "Asadbek", url: SITE }],
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url: SITE,
+      siteName: t("title"),
+      locale: locale === "ru" ? "ru_RU" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: t("title"),
+      description: t("description"),
+    },
+    robots: { index: true, follow: true, nocache: true },
+  };
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#0c1b36",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en">
-      <body className={`bg-white`}>
-        {children} <Analytics />
+    <html lang={locale}>
+      <body>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
