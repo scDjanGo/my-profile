@@ -15,9 +15,12 @@ import {
   IconClose,
   IconGear,
   IconLeaf,
+  IconLock,
   IconMoon,
   IconNightLight,
   IconPlane,
+  IconPower,
+  IconReload,
   IconSearch,
   IconSun,
   IconVolume,
@@ -31,6 +34,7 @@ import { APPS, TASKBAR_H, useWM, useWindowInfo, type AppProps } from "./WindowMa
 import { effectiveBrightness, isOnline, playDing, system, useBattery, useSystem } from "./system";
 import { useAppLocale, useSwitchLocale } from "./i18n";
 import Menu, { type MenuEntry } from "./Menu";
+import { useShell } from "./shell";
 
 export type Panel = "start" | "search" | "quick" | "calendar" | "hidden" | "lang" | "taskview" | null;
 
@@ -74,6 +78,9 @@ export function Taskbar({ panel, setPanel, unread }: { panel: Panel; setPanel: (
   const ta = useTranslations("apps");
   const tc = useTranslations("common");
   const tset = useTranslations("settings");
+  const tl = useTranslations("lock");
+  const tf = useTranslations("fs");
+  const shell = useShell();
   const now = useClock();
   const locale = useAppLocale();
   const sys = useSystem();
@@ -84,6 +91,32 @@ export function Taskbar({ panel, setPanel, unread }: { panel: Panel; setPanel: (
   const items = [...PINNED, ...running.filter((a) => !PINNED.some((p) => p.app === a)).map((app) => ({ app }))];
 
   const toggle = (p: Panel) => setPanel(panel === p ? null : p);
+
+  /** Right-click on Start — Windows' power-user (Win+X) menu */
+  const startMenu = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPanel(null);
+    const entries: MenuEntry[] = [
+      { label: ta("settings"), icon: <AppIcon icon="settings" size={16} />, onClick: () => open("settings") },
+      { label: ta("explorer"), icon: <AppIcon icon="folder" size={16} />, onClick: () => open("explorer", { folder: "root" }) },
+      { label: ta("terminal"), icon: <AppIcon icon="terminal" size={16} />, onClick: () => open("terminal") },
+      { label: ta("run"), icon: <AppIcon icon="run" size={16} />, shortcut: "Ctrl+R", onClick: () => open("run") },
+      "separator",
+      {
+        label: t("powerMenu"),
+        icon: <IconPower />,
+        submenu: [
+          { label: tl("lock"), icon: <IconLock />, onClick: shell.lock },
+          { label: tl("shutdown"), icon: <IconPower />, onClick: shell.shutdown },
+          { label: tl("restart"), icon: <IconReload />, onClick: shell.restart },
+        ],
+      },
+      { label: tf("desktop"), icon: <AppIcon icon="pc" size={16} />, onClick: () => dispatch({ type: "minimizeAll" }) },
+    ];
+    const r = e.currentTarget.getBoundingClientRect();
+    setMenu({ x: r.left, y: r.top - 12 - 6 * 34 - 10, items: entries });
+  };
 
   const clickApp = (item: (typeof PINNED)[number]) => {
     setPanel(null);
@@ -137,7 +170,7 @@ export function Taskbar({ panel, setPanel, unread }: { panel: Panel; setPanel: (
         <div className="flex-1 max-sm:hidden" />
 
         <nav className="flex h-full items-center gap-1 max-sm:gap-0">
-          <button aria-label={t("start")} title={t("start")} className={`win-tb-btn ${panel === "start" ? "is-on" : ""}`} onClick={() => toggle("start")}>
+          <button aria-label={t("start")} title={t("start")} className={`win-tb-btn ${panel === "start" ? "is-on" : ""}`} onClick={() => toggle("start")} onContextMenu={startMenu}>
             <WinLogo size={22} />
           </button>
           <button

@@ -3,7 +3,7 @@
 import { useRef, useState, useSyncExternalStore } from "react";
 import type { FsNode } from "@/data/desktop";
 import { TASKBAR_H, useWM } from "./WindowManager";
-import { childrenOf, fs, nodeOf, useFs, type Cell } from "./fs";
+import { canDrop, childrenOf, dnd, dropInto, fs, setDragPayload, nodeOf, useFs, type Cell, type DragPayload } from "./fs";
 import { useAppLocale, useFsLabels } from "./i18n";
 import { useSystem, type IconSize } from "./system";
 import { NodeThumb, RenameField } from "./apps/Explorer";
@@ -130,6 +130,8 @@ export default function DesktopIcons({
   const { iconSize, sortBy, autoArrange } = useSystem();
   const vp = useViewport();
   const [drag, setDrag] = useState<Drag | null>(null);
+  /** Folder icon under an item dragged in from an Explorer window */
+  const [htmlOver, setHtmlOver] = useState<string | null>(null);
   const dragRef = useRef<Drag | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const frameReq = useRef(0);
@@ -171,9 +173,12 @@ export default function DesktopIcons({
     r: Math.min(rows - 1, Math.max(0, Math.floor((y - PAD) / cell.h))),
   });
 
-  /** Icon under the cursor that can take a drop (Recycle Bin or a folder) */
+  /** Icon under the cursor that can take a drop (Recycle Bin or a folder), or a folder in an Explorer window */
   const dropTargetAt = (x: number, y: number, ids: string[]) => {
     for (const el of document.elementsFromPoint(x, y)) {
+      const zone = (el as HTMLElement).closest<HTMLElement>("[data-drop-folder]")?.dataset.dropFolder;
+      if (zone) return zone === "desktop" || zone === "root" ? null : zone;
+      if ((el as HTMLElement).closest("[data-window]")) return null;
       const id = (el as HTMLElement).closest<HTMLElement>("[data-icon-id]")?.dataset.iconId;
       if (!id || ids.includes(id)) continue;
       return nodeOf(fsState, id)?.kind === "folder" ? id : null;
@@ -182,8 +187,7 @@ export default function DesktopIcons({
   };
 
   const finishDrag = (d: Drag, x: number, y: number) => {
-    if (d.over === "bin") return fs.remove(d.ids, "desktop");
-    if (d.over) return fs.move(d.ids, "desktop", d.over);
+    if (d.over) return dropInto(d.over, { ids: d.ids, from: "desktop" });
 
     const origin = layout[d.id];
     const target = cellAt(x, y);
@@ -203,6 +207,46 @@ export default function DesktopIcons({
       taken.add(key(placed));
     }
     fs.setPositions(next);
+  };
+
+  /** Items dropped from Explorer land in the grid cell under the cursor */
+  const dropOnDesktop = (payload: DragPayload, x: number, y: number) => {
+    const next: Record<string, Cell> = { ...layout };
+    const taken = new Set(Object.entries(layout).filter(([id]) => !payload.ids.includes(id)).map(([, p]) => key(p)));
+    const want = cellAt(x, y);
+    payload.ids.forEach((id, i) => {
+      const cell = nearestFree({ c: want.c, r: Math.min(rows - 1, want.r + i) }, taken, rows, cols);
+      next[id] = cell;
+      taken.add(key(cell));
+    });
+    fs.move(payload.ids, payload.from, "desktop");
+    if (!autoArrange) fs.setPositions(next);
+  };
+
+  const htmlTarget = (e: React.DragEvent) => {
+    const over = dropTargetAt(e.clientX, e.clientY, dnd.current?.ids ?? []);
+    return over && canDrop(over) ? over : null;
+  };
+
+  const onDragOver = (e: React.DragEvent) => {
+    const payload = dnd.current;
+    if (!payload) return;
+    const over = htmlTarget(e);
+    if (!over && payload.from === "desktop") return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (over !== htmlOver) setHtmlOver(over);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    const payload = dnd.current;
+    if (!payload) return;
+    e.preventDefault();
+    const over = htmlTarget(e);
+    setDragPayload(null);
+    setHtmlOver(null);
+    if (over) dropInto(over, payload);
+    else dropOnDesktop(payload, e.clientX, e.clientY);
   };
 
   const onPointerDown = (e: React.PointerEvent, n: FsNode) => {
@@ -252,6 +296,11 @@ export default function DesktopIcons({
       className={mobile ? "win-desktop-grid absolute inset-0 grid gap-1 p-2" : "absolute inset-0"}
       data-size={iconSize}
       style={mobile ? undefined : { padding: PAD }}
+      onDragOver={onDragOver}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setHtmlOver(null);
+      }}
+      onDrop={onDrop}
     >
       {nodes.map((n) => {
         const isSel = selected.includes(n.id);
@@ -306,7 +355,7 @@ export default function DesktopIcons({
                 onContextMenu(e, n.id);
               }}
               className={`win-desktop-icon ${isSel ? "is-selected" : ""} ${dragging ? "is-dragging" : ""} ${
-                drag?.over === n.id ? "is-drop-target" : ""
+                drag?.over === n.id || htmlOver === n.id ? "is-drop-target" : ""
               }`}
             >
               <NodeThumb node={n} size={n.project ? Math.round(ICON_PX[iconSize] * 0.7) : ICON_PX[iconSize]} />

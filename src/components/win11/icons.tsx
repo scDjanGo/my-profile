@@ -139,6 +139,31 @@ function Pdf({ size = 48, ...p }: P) {
   );
 }
 
+function Drive({ size = 48, system, ...p }: P & { system?: boolean }) {
+  return (
+    <svg viewBox="0 0 48 48" {...base(size, p)}>
+      <defs>
+        <linearGradient id="dv" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#E9EDF2" />
+          <stop offset="1" stopColor="#B9C2CC" />
+        </linearGradient>
+      </defs>
+      <path d="M8 28 12 13a3 3 0 0 1 2.9-2.2h18.2A3 3 0 0 1 36 13l4 15Z" fill="#D7DDE4" stroke="#9AA4AF" />
+      <rect x="6" y="27" width="36" height="12" rx="3" fill="url(#dv)" stroke="#8E98A3" />
+      <rect x="31" y="31.5" width="7" height="3" rx="1.5" fill="#3FB950" />
+      <path d="M11 33h14" stroke="#8E98A3" strokeWidth="1.5" strokeLinecap="round" />
+      {system && (
+        <g transform="translate(17 13.5)">
+          <rect width="6.2" height="6.2" fill="#0F6CBD" />
+          <rect x="7" width="6.2" height="6.2" fill="#0F6CBD" />
+          <rect y="7" width="6.2" height="6.2" fill="#0F6CBD" />
+          <rect x="7" y="7" width="6.2" height="6.2" fill="#0F6CBD" />
+        </g>
+      )}
+    </svg>
+  );
+}
+
 function Tile({ size = 48, bg, children, ...p }: P & { bg: string }) {
   return (
     <svg viewBox="0 0 48 48" {...base(size, p)}>
@@ -207,6 +232,48 @@ export function AppIcon({ icon, size = 48 }: { icon: IconKey; size?: number }) {
             </FolderBadge>
           }
         />
+      );
+    case "folder-games":
+      return (
+        <Folder
+          size={size}
+          accent={
+            <FolderBadge color="#E3008C">
+              <path d="M4.5 6.5h7a2 2 0 0 1 2 2.2l-.4 2.6a1.3 1.3 0 0 1-2.3.6L10 10.5H6l-.8 1.4a1.3 1.3 0 0 1-2.3-.6l-.4-2.6a2 2 0 0 1 2-2.2ZM5.5 8v1.6M4.7 8.8h1.6" />
+            </FolderBadge>
+          }
+        />
+      );
+    case "drive-c":
+      return <Drive size={size} system />;
+    case "drive-d":
+      return <Drive size={size} />;
+    case "terminal":
+      return (
+        <svg viewBox="0 0 48 48" width={size} height={size} aria-hidden>
+          <rect x="4" y="7" width="40" height="34" rx="4" fill="#1E1E1E" stroke="#4A4A4A" />
+          <rect x="4" y="7" width="40" height="7" rx="4" fill="#3A3A3A" />
+          <path d="M11 22l6 5-6 5" fill="none" stroke="#E6E6E6" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M21 33h10" stroke="#E6E6E6" strokeWidth="2.6" strokeLinecap="round" />
+        </svg>
+      );
+    case "run":
+      return (
+        <svg viewBox="0 0 48 48" width={size} height={size} aria-hidden>
+          <rect x="5" y="9" width="38" height="30" rx="3" fill="#fff" stroke="#9AA4AF" />
+          <rect x="5" y="9" width="38" height="7" rx="3" fill="#0F6CBD" />
+          <rect x="10" y="24" width="22" height="7" rx="1.5" fill="#E9EDF2" stroke="#9AA4AF" />
+          <path d="M34 27.5h5m-2.5-2.5 2.5 2.5-2.5 2.5" fill="none" stroke="#0F6CBD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "exe":
+      return (
+        <svg viewBox="0 0 48 48" width={size} height={size} aria-hidden>
+          <rect x="5" y="8" width="38" height="32" rx="3" fill="#F3F5F8" stroke="#9AA4AF" />
+          <rect x="5" y="8" width="38" height="7" rx="3" fill="#C42B1C" />
+          <path d="M24 20.5 33 36H15Z" fill="#FFB900" stroke="#C78E00" strokeLinejoin="round" />
+          <path d="M24 25.5v5M24 33.2v.1" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round" />
+        </svg>
       );
     case "pc":
       return <Pc size={size} />;

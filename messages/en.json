@@ -13,7 +13,9 @@
     "settings": "Settings",
     "calculator": "Calculator",
     "paint": "Paint",
-    "solitaire": "Solitaire"
+    "solitaire": "Solitaire",
+    "terminal": "Command Prompt",
+    "run": "Run"
   },
   "fs": {
     "root": "This PC",
@@ -30,7 +32,14 @@
     "newFolder": "New folder",
     "calculator": "Calculator",
     "paint": "Paint",
-    "solitaire": "Solitaire"
+    "solitaire": "Solitaire",
+    "c": "Local Disk (C:)",
+    "d": "Fun (D:)",
+    "games": "Games",
+    "program-files": "Program Files",
+    "cmd": "Command Prompt",
+    "run": "Run",
+    "crash": "DO_NOT_OPEN.exe"
   },
   "types": {
     "folder": "File folder",
@@ -38,7 +47,9 @@
     "pdf": "PDF Document",
     "txt": "Text Document",
     "shortcut": "Shortcut",
-    "skill": "Skill"
+    "skill": "Skill",
+    "drive": "Local Disk",
+    "game": "Game"
   },
   "common": {
     "open": "Open",
@@ -81,7 +92,8 @@
     "clock": "Date and time, notifications",
     "notifications": "Notifications",
     "taskView": "Task View",
-    "noWindows": "No open windows"
+    "noWindows": "No open windows",
+    "powerMenu": "Shut down or sign out"
   },
   "start": {
     "search": "Search for apps, projects and documents",
@@ -181,7 +193,13 @@
     "empty": "This folder is empty.",
     "noMatch": "No items match your search.",
     "hint": "Select a file to see its details.",
-    "newTab": "New tab"
+    "newTab": "New tab",
+    "drives": "Devices and drives ({count})",
+    "free": "{free} free of {total}",
+    "gb": "{n} GB",
+    "used": "Used space",
+    "freeSpace": "Free space",
+    "capacity": "Capacity"
   },
   "browser": {
     "newTab": "New Tab",
@@ -264,7 +282,7 @@
     "position": "Ln {ln}, Col {col}",
     "chars": "{count, plural, one {# character} other {# characters}}",
     "untitled": "Untitled",
-    "readme": "Hi! I'm Asadbek — Frontend Developer.\n\nI build modern, fast web applications for B2B and B2C:\ninterfaces that are not only convenient, but enjoyable to use.\n\nWhat's on this desktop\n----------------------\n  About Me       — who I am, what I do, skills and contacts\n  Projects       — commercial projects I took part in\n  Pet Projects   — small tools that are useful to people\n  My Tools       — the stack I work with every day\n  Resume.pdf     — my CV\n  Google Chrome  — yes, it actually works. Try it :)\n  Settings       — themes, accent colors, language\n\nStack\n-----\nReact, Next.js, TypeScript, Tailwind CSS, SASS, Redux, Zustand,\nAxios, i18n, Node.js, Express, MongoDB, Git.\n\nContacts\n--------\n  Email     bek229101@gmail.com\n  WhatsApp  +996 (557) 766 997\n  Telegram  @scDjanGo\n  GitHub    github.com/scDjanGo\n\nTips: double-click icons, drag windows by the title bar,\nhover the maximize button for snap layouts,\ndrag a window to a screen edge to snap it,\nright-click the desktop for more options.\n"
+    "readme": "Hi! I'm Asadbek — Frontend Developer.\n\nI build modern, fast web applications for B2B and B2C:\ninterfaces that are not only convenient, but enjoyable to use.\n\nOn the desktop\n--------------\n  About Me       — who I am, what I do, skills and contacts\n  Resume.pdf     — my CV\n  Projects       — commercial projects I took part in\n  Contacts       — GitHub, LinkedIn, Telegram, WhatsApp, email\n  This PC        — everything else, see below\n\nThis PC\n-------\n  C:  Pet Projects, My Tools (the stack I use every day),\n      Documents and Program Files (Chrome really works)\n  D:  the fun part — games, Paint and a file you'd better not open\n\nStack\n-----\nReact, Next.js, TypeScript, Tailwind CSS, SASS, Redux, Zustand,\nAxios, i18n, Node.js, Express, MongoDB, Git.\n\nContacts\n--------\n  Email     bek229101@gmail.com\n  WhatsApp  +996 (557) 766 997\n  Telegram  @scDjanGo\n  GitHub    github.com/scDjanGo\n\nTips: double-click icons, drag windows by the title bar,\nhover the maximize button for snap layouts.\nAlt+F4 closes the active window, Ctrl+R opens Run —\ntype cmd there and try ipconfig /all.\nRight-click the desktop or the Start button for more.\n"
   },
   "pdf": {
     "download": "Download",
@@ -373,5 +391,26 @@
     "won": "You won!",
     "wonText": "{moves} moves · {time} · {score} points",
     "playAgain": "Play again"
+  },
+  "run": {
+    "prompt": "Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.",
+    "open": "Open:",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "browse": "Browse...",
+    "history": "Recent commands",
+    "notFound": "Windows cannot find “{name}”. Make sure you typed the name correctly, and then try again."
+  },
+  "shutdownDialog": {
+    "title": "Shut Down Windows",
+    "question": "What do you want the computer to do?",
+    "lock": "Lock",
+    "lockHint": "Locks the PC. Your open apps stay as they are.",
+    "shutdown": "Shut down",
+    "shutdownHint": "Closes all apps and turns off the PC.",
+    "restart": "Restart",
+    "restartHint": "Closes all apps, turns off the PC, and then turns it on again.",
+    "ok": "OK",
+    "cancel": "Cancel"
   }
 }

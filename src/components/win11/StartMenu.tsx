@@ -12,9 +12,9 @@ import { useAppLocale, useFsLabels } from "./i18n";
 import Menu from "./Menu";
 import { IconChevronLeft, IconChevronRight, IconLock, IconPower, IconReload, IconSearch, UserAvatar } from "./icons";
 
-const PINNED = ["root", "browser", "about", "readme", "resume", "settings", "calculator", "paint", "solitaire", "projects", "pets", "github"];
+const PINNED = ["root", "browser", "about", "resume", "settings", "calculator", "paint", "solitaire", "cmd", "projects", "pets", "github"];
 const RECOMMENDED = ["project-9", "project-11", "project-1", "project-3", "pet-3", "pet-1"];
-const ALL_APPS = ["about", "calculator", "root", "browser", "readme", "resume", "settings", "paint", "solitaire", "github", "linkedin", "telegram", "whatsapp", "gmail"];
+const ALL_APPS = ["about", "calculator", "cmd", "root", "browser", "readme", "resume", "run", "settings", "paint", "solitaire", "github", "linkedin", "telegram", "whatsapp", "gmail"];
 
 export default function StartMenu({
   searchFirst,
@@ -59,6 +59,7 @@ export default function StartMenu({
           (n) =>
             labels.name(n).toLowerCase().includes(q) ||
             labels.type(n).toLowerCase().includes(q) ||
+            n.keywords?.some((k) => k.startsWith(q)) ||
             n.project?.description[locale].toLowerCase().includes(q),
         )
         .slice(0, 8)

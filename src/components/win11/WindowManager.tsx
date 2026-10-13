@@ -40,6 +40,8 @@ interface AppMeta {
   frameless?: boolean;
   /** Fixed-size window without resize handles */
   fixed?: boolean;
+  /** Dialog box: only a close button, opens above the Start button like Win+R */
+  dialog?: boolean;
 }
 
 export const APPS: Record<AppId, AppMeta> = {
@@ -52,6 +54,8 @@ export const APPS: Record<AppId, AppMeta> = {
   calculator: { icon: "calculator", w: 330, h: 520, single: true },
   paint: { icon: "paint", w: 1100, h: 760 },
   solitaire: { icon: "solitaire", w: 1000, h: 720, single: true },
+  terminal: { icon: "terminal", w: 880, h: 520 },
+  run: { icon: "run", w: 420, h: 214, single: true, fixed: true, dialog: true },
 };
 
 type Action =
@@ -80,6 +84,7 @@ function initialRect(meta: AppMeta, count: number): Rect & { maximized: boolean 
   const w = Math.min(meta.w, vw - 24);
   const h = Math.min(meta.h, vh - 24);
   const offset = (count % 6) * 28;
+  if (meta.dialog) return { x: 12, y: Math.max(12, vh - h - 12), w, h, maximized: false };
   return {
     x: Math.max(12, Math.round((vw - w) / 2) - 70 + offset),
     y: Math.max(12, Math.round((vh - h) / 2) - 40 + offset),
@@ -186,6 +191,10 @@ export function WindowManager({ children }: { children: React.ReactNode }) {
     (node: FsNode) => {
       if (node.kind === "folder") return open("explorer", { folder: node.id });
       if (node.kind === "link" && node.url) {
+        if (node.navigate) {
+          window.location.assign(node.url);
+          return;
+        }
         if (node.external) {
           window.open(node.url, "_blank", "noopener,noreferrer");
           return;

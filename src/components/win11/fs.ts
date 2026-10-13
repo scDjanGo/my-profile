@@ -23,8 +23,9 @@ export interface Cell {
   r: number;
 }
 
-const KEY = "win11-fs";
-const PROTECTED = new Set(["root", "desktop", "bin"]);
+// v2: the desktop was slimmed down and content moved onto drives C: and D:
+const KEY = "win11-fs-v2";
+const PROTECTED = new Set(["root", "desktop", "bin", "c", "d"]);
 
 const initial: FsState = { children: {}, created: {}, renamed: {}, origin: {}, positions: {} };
 let state = initial;
@@ -43,18 +44,14 @@ function commit(next: FsState) {
   listeners.forEach((l) => l());
 }
 
-const START_ONLY = ["paint", "solitaire"];
-
 function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) ?? "null") as FsState | null;
+    localStorage.removeItem("win11-fs");
     if (saved?.children) {
       state = { ...initial, ...saved };
-      // Paint and Solitaire live in Start only; drop shortcuts saved by older versions
-      const desktop = state.children.desktop;
-      if (desktop) state.children = { ...state.children, desktop: desktop.filter((id) => !START_ONLY.includes(id)) };
       queueMicrotask(() => listeners.forEach((l) => l()));
     }
   } catch {}
@@ -71,16 +68,25 @@ export function childrenOf(s: FsState, id: string): string[] {
   return list.filter((c) => nodeOf(s, c));
 }
 
-/** Folder that "owns" an item: This PC for top-level folders, otherwise the first folder listing it */
+/**
+ * Folder that "owns" an item, preferring its place on a drive over the desktop shortcut,
+ * so Projects opened from the desktop still shows "This PC > C: > Projects".
+ */
 export function parentOf(s: FsState, id: string): string | null {
   if (id === "root") return null;
   if (s.origin[id] && childrenOf(s, "bin").includes(id)) return "bin";
-  const folders = ["root", "desktop", ...Object.keys(FS), ...Object.keys(s.created)];
+  const folders = ["root", ...Object.keys(FS).filter((f) => f !== "desktop" && f !== "root"), ...Object.keys(s.created), "desktop"];
   for (const f of folders) {
     const n = nodeOf(s, f);
     if (n?.kind === "folder" && childrenOf(s, f).includes(id)) return f;
   }
   return "root";
+}
+
+/** True when `target` is `id` itself or sits somewhere inside it */
+function isInside(s: FsState, target: string, id: string): boolean {
+  if (target === id) return true;
+  return childrenOf(s, id).some((c) => nodeOf(s, c)?.kind === "folder" && isInside(s, target, c));
 }
 
 const setChildren = (s: FsState, id: string, list: string[]) => ({ ...s.children, [id]: list });
@@ -135,7 +141,8 @@ export const fs = {
   },
   /** Moves items into another folder (drag-and-drop onto a folder icon) */
   move(ids: string[], from: string, to: string) {
-    const moving = ids.filter((id) => id !== to && fs.canDelete(id) && nodeOf(state, to)?.kind === "folder");
+    if (from === to || to === "root") return;
+    const moving = ids.filter((id) => !isInside(state, to, id) && fs.canDelete(id) && nodeOf(state, to)?.kind === "folder");
     if (!moving.length) return;
     const positions = { ...state.positions };
     moving.forEach((id) => delete positions[id]);
@@ -163,6 +170,32 @@ export const fs = {
     commit({ ...state, created, origin, children: { ...state.children, bin: [] } });
   },
 };
+
+/** Items being dragged out of an Explorer window (HTML drag and drop) */
+export interface DragPayload {
+  ids: string[];
+  from: string;
+}
+
+export const dnd: { current: DragPayload | null } = { current: null };
+
+export function setDragPayload(payload: DragPayload | null) {
+  dnd.current = payload;
+}
+
+/** Drops dragged items onto a folder; the Recycle Bin deletes them, like in Windows */
+export function dropInto(target: string, payload: DragPayload) {
+  if (target === "bin") return fs.remove(payload.ids, payload.from);
+  fs.move(payload.ids, payload.from, target);
+}
+
+/** Whether a folder can take the items being dragged right now */
+export function canDrop(target: string) {
+  const d = dnd.current;
+  if (!d || target === d.from || target === "root") return false;
+  if (target === "bin") return d.from !== "bin";
+  return nodeOf(state, target)?.kind === "folder" && !d.ids.some((id) => isInside(state, target, id));
+}
 
 export function useFs() {
   return useSyncExternalStore(fs.subscribe, fs.get, () => initial);

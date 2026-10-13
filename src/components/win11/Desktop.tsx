@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import DesktopIcons from "./DesktopIcons";
 import LockScreen, { PowerScreen } from "./LockScreen";
 import StartMenu from "./StartMenu";
@@ -13,10 +13,12 @@ import { TASKBAR_H, WindowManager, useWM, useWindowInfo } from "./WindowManager"
 import { fs, nodeOf, useFs } from "./fs";
 import { useAppLocale, useSwitchLocale } from "./i18n";
 import { effectiveBrightness, system, useSystem } from "./system";
-import Menu, { type MenuEntry } from "./Menu";
+import Menu, { useDropdown, type MenuEntry } from "./Menu";
+import { ShellContext } from "./shell";
 import {
   AppIcon,
   IconBrush,
+  IconChevronDown,
   IconClose,
   IconCopy,
   IconExternal,
@@ -27,6 +29,7 @@ import {
   IconPlus,
   IconRefresh,
   IconSort,
+  WinLogo,
 } from "./icons";
 
 type Power = "boot" | "locked" | "on" | "shutdown" | "restart" | "off";
@@ -97,8 +100,70 @@ function TaskView({ close }: { close: () => void }) {
   );
 }
 
+type PowerChoice = "lock" | "shutdown" | "restart";
+
+/** Alt+F4 on an empty desktop: the classic "Shut Down Windows" dialog */
+function ShutdownDialog({ onChoose, onCancel }: { onChoose: (c: PowerChoice) => void; onCancel: () => void }) {
+  const t = useTranslations("shutdownDialog");
+  const [choice, setChoice] = useState<PowerChoice>("shutdown");
+  const dd = useDropdown();
+  const choices: PowerChoice[] = ["lock", "shutdown", "restart"];
+  return (
+    <div
+      className="fixed inset-0 z-[9500] flex items-center justify-center bg-black/20 p-4"
+      onPointerDown={(e) => e.target === e.currentTarget && onCancel()}
+    >
+      <motion.form
+        data-flyout
+        role="dialog"
+        aria-label={t("title")}
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.16, ease: [0.1, 0.9, 0.2, 1] }}
+        className="win-window is-active w-[420px] max-w-full overflow-hidden rounded-lg text-[13px]"
+        onSubmit={(e) => {
+          e.preventDefault();
+          onChoose(choice);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape" && !dd.menu) onCancel();
+        }}
+      >
+        <header className="win-titlebar flex h-8 items-center pl-3 text-xs">{t("title")}</header>
+        <div className="flex items-center gap-3 bg-linear-to-r from-[#0a3d91] to-[#1f7ae0] px-6 py-5 text-white">
+          <WinLogo size={30} />
+          <span className="win-display text-2xl font-semibold tracking-tight">Windows 11</span>
+        </div>
+        <div className="flex flex-col gap-3 bg-(--card) px-6 py-5">
+          <label className="font-semibold">{t("question")}</label>
+          <button type="button" autoFocus className="win-btn flex items-center justify-between text-left" onClick={dd.toggle("power")}>
+            {t(choice)} <IconChevronDown size={10} />
+          </button>
+          <p className="min-h-10 text-(--text-2)">{t(`${choice}Hint`)}</p>
+        </div>
+        <div className="flex justify-end gap-2 border-t border-(--divider) bg-(--mica) px-6 py-3">
+          <button type="submit" className="win-btn win-btn-accent min-w-24">
+            {t("ok")}
+          </button>
+          <button type="button" className="win-btn min-w-24" onClick={onCancel}>
+            {t("cancel")}
+          </button>
+        </div>
+        {dd.menu && (
+          <Menu
+            x={dd.menu.x}
+            y={dd.menu.y}
+            onClose={dd.close}
+            items={choices.map((c) => ({ label: t(c), checked: c === choice, radio: true, onClick: () => setChoice(c) }))}
+          />
+        )}
+      </motion.form>
+    </div>
+  );
+}
+
 function Shell({ power, setPower }: { power: Power; setPower: (p: Power) => void }) {
-  const { windows, openNode, open, dispatch } = useWM();
+  const { windows, activeId, openNode, open, dispatch } = useWM();
   const t = useTranslations("desktop");
   const tc = useTranslations("common");
   const tf = useTranslations("fs");
@@ -119,6 +184,51 @@ function Shell({ power, setPower }: { power: Power; setPower: (p: Power) => void
   const [toast, setToast] = useState<Notice | null>(null);
   const [unread, setUnread] = useState(INITIAL_NOTICES.length);
   const toastShown = useRef(false);
+  const [shutdownAsk, setShutdownAsk] = useState(false);
+
+  const shellActions = useMemo(
+    () => ({
+      lock: () => {
+        setPanel(null);
+        setPower("locked");
+      },
+      shutdown: () => {
+        setPanel(null);
+        dispatch({ type: "closeAll" });
+        setPower("shutdown");
+      },
+      restart: () => {
+        setPanel(null);
+        dispatch({ type: "closeAll" });
+        setPower("restart");
+      },
+    }),
+    [dispatch, setPower],
+  );
+
+  // Alt+F4 closes the active window (or asks to shut down on an empty desktop), Ctrl+R opens Run.
+  // Win+R itself never reaches a web page — the OS takes it — so Ctrl+R stands in for it.
+  useEffect(() => {
+    if (power !== "on") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.altKey && e.key === "F4") {
+        e.preventDefault();
+        if (shutdownAsk) setShutdownAsk(false);
+        else if (activeId) dispatch({ type: "close", id: activeId });
+        else {
+          setPanel(null);
+          setShutdownAsk(true);
+        }
+      }
+      if (e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey && e.code === "KeyR") {
+        e.preventDefault();
+        setPanel(null);
+        open("run");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [power, activeId, shutdownAsk, dispatch, open]);
 
   // Close flyouts when clicking anywhere outside of them; Esc closes too
   useEffect(() => {
@@ -296,6 +406,7 @@ function Shell({ power, setPower }: { power: Power; setPower: (p: Power) => void
   const brightness = effectiveBrightness(sys);
 
   return (
+    <ShellContext.Provider value={shellActions}>
     <div className="win-root fixed inset-0 overflow-hidden">
       {sys.wallpaper3d ? <Wallpaper3D /> : <div className="win-wallpaper absolute inset-0" />}
 
@@ -343,20 +454,9 @@ function Shell({ power, setPower }: { power: Power; setPower: (p: Power) => void
               key="start"
               searchFirst={panel === "search"}
               close={closePanel}
-              onLock={() => {
-                setPanel(null);
-                setPower("locked");
-              }}
-              onShutdown={() => {
-                setPanel(null);
-                dispatch({ type: "closeAll" });
-                setPower("shutdown");
-              }}
-              onRestart={() => {
-                setPanel(null);
-                dispatch({ type: "closeAll" });
-                setPower("restart");
-              }}
+              onLock={shellActions.lock}
+              onShutdown={shellActions.shutdown}
+              onRestart={shellActions.restart}
             />
           )}
           {panel === "quick" && <QuickSettings key="quick" close={closePanel} />}
@@ -407,6 +507,19 @@ function Shell({ power, setPower }: { power: Power; setPower: (p: Power) => void
       {menu && <Menu x={menu.x} y={menu.y} onClose={() => setMenu(null)} items={menu.target ? itemMenu(menu.target) : backgroundMenu} />}
 
       <AnimatePresence>
+        {shutdownAsk && power === "on" && (
+          <ShutdownDialog
+            key="shutdown"
+            onCancel={() => setShutdownAsk(false)}
+            onChoose={(c) => {
+              setShutdownAsk(false);
+              shellActions[c]();
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {power === "locked" && (
           <LockScreen
             key="lock"
@@ -425,6 +538,7 @@ function Shell({ power, setPower }: { power: Power; setPower: (p: Power) => void
         />
       )}
     </div>
+    </ShellContext.Provider>
   );
 }
 

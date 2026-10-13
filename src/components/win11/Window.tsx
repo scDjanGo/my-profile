@@ -14,6 +14,8 @@ import Settings from "./apps/Settings";
 import Calculator from "./apps/Calculator";
 import Paint from "./apps/Paint";
 import Solitaire from "./apps/Solitaire";
+import Terminal from "./apps/Terminal";
+import Run from "./apps/Run";
 
 const MIN_W = 320;
 const MIN_H = 240;
@@ -101,6 +103,10 @@ function AppContent({ win }: { win: WinState }) {
       return <Paint />;
     case "solitaire":
       return <Solitaire />;
+    case "terminal":
+      return <Terminal win={win} />;
+    case "run":
+      return <Run win={win} />;
   }
 }
 
@@ -110,7 +116,7 @@ function Captions({ win }: { win: WinState }) {
   const tw = useTranslations("window");
   const [snap, setSnap] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const fixed = APPS[win.app].fixed;
+  const { fixed, dialog } = APPS[win.app];
 
   const show = () => {
     clearTimeout(timer.current);
@@ -123,9 +129,11 @@ function Captions({ win }: { win: WinState }) {
 
   return (
     <div className="relative flex h-full shrink-0" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-      <button aria-label={t("minimize")} title={t("minimize")} className="win-caption" onClick={() => dispatch({ type: "minimize", id: win.id })}>
-        <IconMin size={14} strokeWidth={1} />
-      </button>
+      {!dialog && (
+        <button aria-label={t("minimize")} title={t("minimize")} className="win-caption" onClick={() => dispatch({ type: "minimize", id: win.id })}>
+          <IconMin size={14} strokeWidth={1} />
+        </button>
+      )}
       {!fixed && (
         <div className="relative h-full max-sm:hidden" onPointerEnter={show} onPointerLeave={hide}>
           <button

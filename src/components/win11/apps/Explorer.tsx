@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { SIDEBAR, type FsNode } from "@/data/desktop";
 import { useWM, type WinState } from "../WindowManager";
-import { childrenOf, fs, nodeOf, parentOf, useFs } from "../fs";
+import { canDrop, childrenOf, dnd, dropInto, fs, setDragPayload, nodeOf, parentOf, useFs } from "../fs";
 import { useAppLocale, useFsLabels } from "../i18n";
 import Menu, { useDropdown, type MenuEntry } from "../Menu";
 import {
@@ -80,6 +80,16 @@ export function RenameField({ initial, onDone }: { initial: string; onDone: (nam
   );
 }
 
+/** Windows' capacity bar: blue, turning red when the disk is almost full */
+function DriveBar({ total, free }: { total: number; free: number }) {
+  const used = (total - free) / total;
+  return (
+    <div className="win-drive-bar" role="meter" aria-valuemin={0} aria-valuemax={total} aria-valuenow={Math.round(total - free)}>
+      <span className={used > 0.9 ? "is-full" : ""} style={{ width: `${used * 100}%` }} />
+    </div>
+  );
+}
+
 type SortBy = "default" | "name" | "type";
 const SORTS: SortBy[] = ["default", "name", "type"];
 const SORT_KEY = { default: "byDefault", name: "byName", type: "byType" } as const;
@@ -104,6 +114,7 @@ export default function Explorer({ win }: { win: WinState }) {
   const [details, setDetails] = useState(true);
   const [ctx, setCtx] = useState<{ x: number; y: number; target: string | null } | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [dropOver, setDropOver] = useState<string | null>(null);
   const dd = useDropdown();
 
   const current = history.stack[history.index];
@@ -117,6 +128,7 @@ export default function Explorer({ win }: { win: WinState }) {
   const sel = selected.length === 1 ? nodeOf(fsState, selected[0]) : undefined;
   const inBin = folder.id === "bin";
   const up = parentOf(fsState, current);
+  const gb = (n: number) => t("gb", { n: Math.round(n) });
 
   const go = (id: string, mode: "push" | "back" | "forward" = "push") => {
     setSelected([]);
@@ -212,6 +224,45 @@ export default function Explorer({ win }: { win: WinState }) {
     setCtx({ x: e.clientX, y: e.clientY, target: n.id });
   };
 
+  /* ---------- Drag and drop: out to the desktop, other windows, folders and the Recycle Bin ---------- */
+  const dragProps = (n: FsNode) => ({
+    draggable: !inBin && renaming !== n.id && fs.canDelete(n.id),
+    onDragStart: (e: React.DragEvent) => {
+      const ids = (selected.includes(n.id) ? selected : [n.id]).filter(fs.canDelete);
+      if (!selected.includes(n.id)) setSelected([n.id]);
+      setDragPayload({ ids, from: folder.id });
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", ids.map((id) => labels.name(nodeOf(fsState, id)!)).join("\n"));
+    },
+    onDragEnd: () => {
+      setDragPayload(null);
+      setDropOver(null);
+    },
+  });
+  const dropProps = (target: string) => ({
+    "data-drop-folder": target,
+    onDragOver: (e: React.DragEvent) => {
+      if (!canDrop(target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = "move";
+      if (dropOver !== target) setDropOver(target);
+    },
+    onDragLeave: (e: React.DragEvent) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropOver((o) => (o === target ? null : o));
+    },
+    onDrop: (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const payload = dnd.current;
+      if (payload && canDrop(target)) dropInto(target, payload);
+      setDragPayload(null);
+      setDropOver(null);
+    },
+  });
+  const folderDrop = (n: FsNode) => (n.kind === "folder" ? dropProps(n.id) : {});
+  const dropRing = (id: string) => (dropOver === id ? "ring-2 ring-(--accent)" : "");
+
   const rename = (n: FsNode) => (
     <RenameField
       initial={labels.name(n)}
@@ -248,7 +299,7 @@ export default function Explorer({ win }: { win: WinState }) {
         </button>
 
         <nav className="win-field ml-1 flex h-8 min-w-0 flex-1 items-center gap-0.5 overflow-hidden px-2">
-          <AppIcon icon={folder.id === "root" ? "pc" : folder.icon} size={16} />
+          <AppIcon icon={folder.icon} size={16} />
           {chain.map((c, i, arr) => (
             <span key={c.id} className="flex shrink-0 items-center">
               <IconChevronRight size={12} className="mx-0.5 opacity-60" />
@@ -301,18 +352,20 @@ export default function Explorer({ win }: { win: WinState }) {
       </div>
 
       <div className="flex min-h-0 flex-1">
-        <aside className="w-48 shrink-0 overflow-y-auto border-r border-(--divider) p-1.5 max-md:hidden">
-          {[...SIDEBAR.filter((id) => id !== "root"), "bin", "root"].map((id) => {
+        <aside className="w-56 shrink-0 overflow-y-auto border-r border-(--divider) p-1.5 max-md:hidden">
+          {[...SIDEBAR.quick, "root", ...SIDEBAR.drives, "bin"].map((id) => {
             const n = nodeOf(fsState, id)!;
+            const drive = SIDEBAR.drives.includes(id);
             return (
               <button
                 key={id}
                 onClick={() => go(id)}
-                className={`flex w-full items-center gap-2.5 rounded px-2.5 py-1.5 text-left hover:bg-(--hover) ${
+                {...dropProps(id)}
+                className={`flex w-full items-center gap-2.5 rounded py-1.5 pr-2.5 text-left hover:bg-(--hover) ${drive ? "pl-7" : "pl-2.5"} ${
                   current === id ? "bg-(--selected)" : ""
-                } ${id === "root" ? "mt-3" : ""}`}
+                } ${id === "root" || id === "bin" ? "mt-3" : ""} ${dropRing(id)}`}
               >
-                <AppIcon icon={id === "root" ? "pc" : n.icon} size={18} />
+                <AppIcon icon={n.icon} size={18} />
                 <span className="truncate">{labels.name(n)}</span>
               </button>
             );
@@ -321,7 +374,8 @@ export default function Explorer({ win }: { win: WinState }) {
 
         <main
           key={refreshKey}
-          className="win-fade-in min-w-0 flex-1 overflow-auto p-2"
+          {...dropProps(folder.id)}
+          className={`win-fade-in min-w-0 flex-1 overflow-auto p-2 ${dropOver === folder.id ? "bg-(--selected)" : ""}`}
           onClick={() => setSelected([])}
           onContextMenu={(e) => {
             e.preventDefault();
@@ -330,7 +384,36 @@ export default function Explorer({ win }: { win: WinState }) {
         >
           {items.length === 0 && <p className="mt-10 text-center text-(--text-2)">{q ? t("noMatch") : t("empty")}</p>}
 
-          {view === "grid" ? (
+          {view === "grid" && folder.id === "root" ? (
+            <section>
+              <h3 className="px-2 pb-2 pt-1 text-xs font-semibold text-(--text-2)">{t("drives", { count: items.length })}</h3>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-1">
+                {items.map((n) => (
+                  <button
+                    key={n.id}
+                    onClick={(e) => clickItem(e, n)}
+                    onDoubleClick={() => activate(n)}
+                    onContextMenu={(e) => contextItem(e, n)}
+                    {...folderDrop(n)}
+                    className={`flex items-center gap-3 rounded border p-2 text-left ${
+                      selected.includes(n.id) ? "border-(--selected-border) bg-(--selected)" : "border-transparent hover:bg-(--hover)"
+                    } ${dropRing(n.id)}`}
+                  >
+                    <AppIcon icon={n.icon} size={52} />
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      {renaming === n.id ? rename(n) : <span className="truncate">{labels.name(n)}</span>}
+                      {n.drive && (
+                        <>
+                          <DriveBar total={n.drive.total} free={n.drive.free} />
+                          <span className="text-xs text-(--text-2)">{t("free", { free: gb(n.drive.free), total: gb(n.drive.total) })}</span>
+                        </>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : view === "grid" ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-1">
               {items.map((n) => (
                 <button
@@ -338,9 +421,11 @@ export default function Explorer({ win }: { win: WinState }) {
                   onClick={(e) => clickItem(e, n)}
                   onDoubleClick={() => activate(n)}
                   onContextMenu={(e) => contextItem(e, n)}
+                  {...dragProps(n)}
+                  {...folderDrop(n)}
                   className={`flex flex-col items-center gap-1.5 rounded border p-2 text-center ${
                     selected.includes(n.id) ? "border-(--selected-border) bg-(--selected)" : "border-transparent hover:bg-(--hover)"
-                  }`}
+                  } ${dropRing(n.id)}`}
                 >
                   <div className="flex h-16 items-center justify-center">
                     <NodeThumb node={n} size={n.project ? 56 : 52} />
@@ -372,7 +457,9 @@ export default function Explorer({ win }: { win: WinState }) {
                     onClick={(e) => clickItem(e, n)}
                     onDoubleClick={() => activate(n)}
                     onContextMenu={(e) => contextItem(e, n)}
-                    className={`cursor-default ${selected.includes(n.id) ? "bg-(--selected)" : "hover:bg-(--hover)"}`}
+                    {...dragProps(n)}
+                    {...folderDrop(n)}
+                    className={`cursor-default ${selected.includes(n.id) ? "bg-(--selected)" : "hover:bg-(--hover)"} ${dropRing(n.id)}`}
                   >
                     <td className="flex items-center gap-2 px-2 py-1">
                       {n.thumb ? (
@@ -404,6 +491,21 @@ export default function Explorer({ win }: { win: WinState }) {
                 <h3 className="text-base font-semibold">{labels.name(sel)}</h3>
                 <p className="text-xs text-(--text-2) first-letter:uppercase">{labels.type(sel)}</p>
                 {sel.project && <p className="leading-relaxed text-(--text-1)">{sel.project.description[locale]}</p>}
+                {sel.drive && (
+                  <dl className="flex flex-col gap-2">
+                    <DriveBar total={sel.drive.total} free={sel.drive.free} />
+                    {[
+                      [t("used"), gb(sel.drive.total - sel.drive.free)],
+                      [t("freeSpace"), gb(sel.drive.free)],
+                      [t("capacity"), gb(sel.drive.total)],
+                    ].map(([k, v]) => (
+                      <div key={k} className="flex justify-between gap-2">
+                        <dt className="text-(--text-2)">{k}</dt>
+                        <dd>{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
                 <div className="flex flex-wrap gap-2">
                   {inBin ? (
                     <button className="win-btn win-btn-accent" onClick={() => restore([sel.id])}>
@@ -423,7 +525,7 @@ export default function Explorer({ win }: { win: WinState }) {
               </div>
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-(--text-2)">
-                <AppIcon icon={folder.id === "root" ? "pc" : folder.icon} size={64} />
+                <AppIcon icon={folder.icon} size={64} />
                 <p>{selected.length > 1 ? tc("selected", { count: selected.length }) : t("hint")}</p>
               </div>
             )}
